@@ -61,6 +61,7 @@ BACKEND_BINJA = "binja"
 BACKEND_PEFILE = "pefile"
 BACKEND_CAPE = "cape"
 BACKEND_FREEZE = "freeze"
+BACKEND_ANDROID = "android"
 
 
 def is_supported_format(sample: Path) -> bool:
@@ -264,6 +265,16 @@ def get_extractor(
 
     elif backend == BACKEND_FREEZE:
         return frz.load(input_path.read_bytes())
+    
+    # Add here!!!
+    elif backend == BACKEND_ANDROID:
+    import capa.features.extractors.android.extractor
+    
+    frida_output = args.frida_output
+    if not frida_output:
+        raise ValueError("Android backend requires frida_output parameter")
+    
+    return capa.features.extractors.android.extractor.AndroidFeatureExtractor(frida_output)
 
     else:
         raise ValueError("unexpected backend: " + backend)
